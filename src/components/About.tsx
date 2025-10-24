@@ -1,28 +1,62 @@
 import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-
-const images = [
-  'https://lh3.googleusercontent.com/pw/AP1GczNYJNOWS6lvvCo0ODZBxgimIeBrjuVelIxQjoGBBGNh9Jk15wWOJqbQjKoZR2XOX2SJNsh2mnwF3ue-wAi14yrCIzNaBtmXdm1w5gqalg1CT0LdDzhZfwpkrrXWst27-6xadN8tFhsF-p1_qSJZPTE=w1200-h1600-s-no-gm?authuser=0',
-  'https://lh3.googleusercontent.com/pw/AP1GczMIV7XSwaz4X_mzC8y20PN4TLz3g-ns6-eMuRTVyFKme4O8f55ryO2KOf249Xli_TKyRvRIRi240251pKa5eAAkY0ri441geUmcqhcJGu8jQ_MOjbWssDJtvtdHcxBiPbM7QNgiBNMKdeguKA6FBzk=w1200-h1600-s-no-gm?authuser=0',
-  'https://lh3.googleusercontent.com/pw/AP1GczOY5dLqi9RInQBNbH9hkfDHGyg3GqhGORkHGlL9ItGsY7rFE9FtazG5K9uOjRzHie34MCbTfR6IyvihPJKubhAEz7_2vUg_ePZUtFOcIXouGakD6g6thRQg8AJWqt6HV38ycxpQsYXGtvZ7jQ6-Wqg=w1200-h1600-s-no-gm?authuser=0',
-  'https://lh3.googleusercontent.com/pw/AP1GczPfdb9bQpIG_2MPVh1poZmnzBVPtHOAY5aIBkS5sg3KszeuikGnGC4logcQMVZiBltpe93zYos-SZrK1Qa3iz7CmQ8_vbt5V0LcRz3DpX8clZRGh4H-iYoObs-sHL3NZK8MsXZLHkqLVo8CnD5n5F0=w1200-h1600-s-no-gm?authuser=0'
-];
+import { client, urlFor } from '../lib/sanity';
+import type { About as AboutType } from '../types/sanity';
 
 export default function About() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [aboutData, setAboutData] = useState<AboutType | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAbout = async () => {
+      try {
+        const data = await client.fetch<AboutType>(
+          `*[_type == "about"][0]{
+            _id,
+            title,
+            paragraph1,
+            paragraph2,
+            images
+          }`
+        );
+        setAboutData(data);
+      } catch (error) {
+        console.error('Error fetching about data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAbout();
+  }, []);
 
   const nextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % images.length);
+    if (!aboutData?.images) return;
+    setCurrentImageIndex((prev) => (prev + 1) % aboutData.images.length);
   };
 
   const previousImage = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+    if (!aboutData?.images) return;
+    setCurrentImageIndex((prev) => (prev - 1 + aboutData.images.length) % aboutData.images.length);
   };
 
   useEffect(() => {
+    if (!aboutData?.images?.length) return;
+    
     const interval = setInterval(nextImage, 4000);
     return () => clearInterval(interval);
-  }, []);
+  }, [aboutData]);
+
+  if (loading || !aboutData) {
+    return (
+      <section id="about" className="py-20 px-4 bg-stone-900 text-white">
+        <div className="max-w-6xl mx-auto text-center">
+          <div className="text-xl">Chargement...</div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="about" className="py-20 px-4 bg-stone-900 text-white">
@@ -30,28 +64,24 @@ export default function About() {
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
             <h2 className="font-serif text-4xl md:text-5xl">
-              Notre Histoire
+              {aboutData.title}
             </h2>
             <div className="w-20 h-1 bg-[#6b4f3a]"></div>
             <p className="text-lg text-stone-300 leading-relaxed">
-              Le Comptoir Aux Huiles trouve ses racines dans l'histoire authentique du quartier
-              du Panier. Installé dans un ancien four à pain datant de 1900, cet espace familial
-              était autrefois une boulangerie qui faisait vivre le quartier.
+              {aboutData.paragraph1}
             </p>
             <p className="text-lg text-stone-300 leading-relaxed">
-              Aujourd'hui, nous perpétuons cette tradition de convivialité en transformant ce
-              lieu chargé d'histoire en un espace de rencontre unique : restaurant, épicerie fine
-              et cave à vin, où se mêlent authenticité marseillaise et saveurs corses.
+              {aboutData.paragraph2}
             </p>
           </div>
 
           <div className="relative">
             <div className="relative h-[480px] overflow-hidden shadow-lg">
-              {images.map((image, index) => (
+              {aboutData.images.map((image, index) => (
                 <img
                   key={index}
-                  src={image}
-                  alt={`Notre histoire ${index + 1}`}
+                  src={urlFor(image).width(800).height(480).url()}
+                  alt={image.alt || `Notre histoire ${index + 1}`}
                   className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
                     index === currentImageIndex ? 'opacity-100' : 'opacity-0'
                   }`}
@@ -77,7 +107,7 @@ export default function About() {
               </button>
 
               <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-                {images.map((_, index) => (
+                {aboutData.images.map((_, index) => (
                   <button
                     key={index}
                     onClick={() => setCurrentImageIndex(index)}

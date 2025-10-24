@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/studio/:path*",
+      "destination": "/studio/index.html"
+    }
+  ],
+  "env": {
+    "VITE_SANITY_PROJECT_ID": "0i7537af",
+    "VITE_SANITY_DATASET": "production"
+  }
+}

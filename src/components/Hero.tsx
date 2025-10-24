@@ -1,37 +1,71 @@
 import { Calendar } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { client, urlFor } from '../lib/sanity';
+import type { Hero as HeroType } from '../types/sanity';
 
 interface HeroProps {
   onReserve: () => void;
   onMenuClick: () => void;
 }
 
-const images = [
-  'https://lh3.googleusercontent.com/pw/AP1GczO2kJnnm8sQ4d6BEUpZwMh8CYKoM-MohdOmVn_Od9ZlyaNw78axFyKPwIikt3NwfyvVgv6j56HN00ANr9PEtQEsqQ-IoHBvLeNgmZ3J0DQtdWjyDOZ-YLlE34CmS6NbCltPL6PbAzCHdQE6DhHrqQLv=w1804-h958-s-no-gm?authuser=1',
-  'https://lh3.googleusercontent.com/pw/AP1GczPVWqpPSBwJkG2S8P4zY_5stqtJ3SF6YknJSSsqlOCa82PMYkLpkaFHl-PhLi7y1anTExr7pouBkcPCe7sL98UFFfvEo4xtZqp9EwnuYvNXhs0bGZY2L_fuTP_hz-5q-WsJsx-GN94658K7wm9UbyE=w1200-h1600-s-no-gm?authuser=0',
-  'https://lh3.googleusercontent.com/pw/AP1GczNb4ghOYULU65aQk0v3LIIBJdsIZwYME0GtB0XBUss5kdixmXCIFTUhABf0nE0ZbLPT3JoxL-mJ-G93FOpZfUOXf1H9YxUXGN4mQ31dNSTSNbXR8vLyZKdO5zdgcsR46HAmHoDUVf2_RyCtTAicvoA=w1200-h1600-s-no-gm?authuser=0'
-];
-
 export default function Hero({ onReserve, onMenuClick }: HeroProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [heroData, setHeroData] = useState<HeroType | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const fetchHero = async () => {
+      try {
+        const data = await client.fetch<HeroType>(
+          `*[_type == "hero"][0]{
+            _id,
+            title,
+            subtitle,
+            images,
+            reservationButtonText,
+            menuButtonText
+          }`
+        );
+        setHeroData(data);
+      } catch (error) {
+        console.error('Error fetching hero data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchHero();
+  }, []);
+
+  useEffect(() => {
+    if (!heroData?.images?.length) return;
+    
     const interval = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % images.length);
+      setCurrentImageIndex((prev) => (prev + 1) % heroData.images.length);
     }, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [heroData]);
+
+  if (loading || !heroData) {
+    return (
+      <div className="relative h-screen w-full overflow-hidden bg-stone-900">
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-white text-xl">Chargement...</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative h-screen w-full overflow-hidden">
-      {images.map((image, index) => (
+      {heroData.images.map((image, index) => (
         <div
           key={index}
           className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ${
             index === currentImageIndex ? 'opacity-100' : 'opacity-0'
           }`}
           style={{
-            backgroundImage: `url('${image}')`,
+            backgroundImage: `url('${urlFor(image).width(1920).url()}')`,
           }}
         >
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
@@ -40,10 +74,10 @@ export default function Hero({ onReserve, onMenuClick }: HeroProps) {
 
       <div className="relative h-full flex flex-col items-center justify-center text-white px-4 text-center">
         <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl mb-6 tracking-tight">
-          Le Comptoir Aux Huiles
+          {heroData.title}
         </h1>
         <p className="text-xl md:text-2xl lg:text-3xl mb-8 max-w-3xl font-light tracking-wide">
-          Un lieu authentique au cœur du Panier
+          {heroData.subtitle}
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <button
@@ -53,7 +87,7 @@ export default function Hero({ onReserve, onMenuClick }: HeroProps) {
                        border-2 border-white hover:scale-105"
           >
             <Calendar className="w-5 h-5" />
-            Réserver une table
+            {heroData.reservationButtonText || 'Réserver une table'}
           </button>
           <button
             onClick={onMenuClick}
@@ -61,7 +95,7 @@ export default function Hero({ onReserve, onMenuClick }: HeroProps) {
                        hover:bg-[#6b4f3a] hover:text-white transition-all duration-300 flex items-center justify-center
                        border-2 border-white hover:border-[#6b4f3a] hover:scale-105"
           >
-            Menu
+            {heroData.menuButtonText || 'Menu'}
           </button>
         </div>
       </div>

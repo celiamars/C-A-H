@@ -1,14 +1,57 @@
 import { MapPin, Phone, Clock, Instagram, Heart } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { client } from '../lib/sanity';
+import type { Footer as FooterType } from '../types/sanity';
 
 export default function Footer() {
+  const [footerData, setFooterData] = useState<FooterType | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchFooter = async () => {
+      try {
+        const data = await client.fetch<FooterType>(
+          `*[_type == "footer"][0]{
+            _id,
+            restaurantName,
+            description,
+            address,
+            phoneNumber,
+            hours,
+            instagram,
+            instagramHandle,
+            googleMapsUrl
+          }`
+        );
+        setFooterData(data);
+      } catch (error) {
+        console.error('Error fetching footer data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFooter();
+  }, []);
+
+  if (loading || !footerData) {
+    return (
+      <footer className="bg-black text-white py-12 px-4">
+        <div className="max-w-6xl mx-auto text-center">
+          <div className="text-stone-400">Chargement...</div>
+        </div>
+      </footer>
+    );
+  }
+
   return (
     <footer className="bg-black text-white py-12 px-4">
       <div className="max-w-6xl mx-auto">
         <div className="grid md:grid-cols-4 gap-8 mb-8">
           <div>
-            <h3 className="font-serif text-2xl mb-4">Le Comptoir Aux Huiles</h3>
+            <h3 className="font-serif text-2xl mb-4">{footerData.restaurantName}</h3>
             <p className="text-stone-400 text-sm leading-relaxed">
-              Restaurant authentique au cœur du Panier, alliant tradition marseillaise et saveurs corses depuis 1900
+              {footerData.description}
             </p>
           </div>
 
@@ -17,15 +60,17 @@ export default function Footer() {
             <div className="space-y-3 text-sm">
               <div className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 mt-1 flex-shrink-0 text-[#6b4f3a]" />
-                <p className="text-stone-400">
-                  38 Rue Sainte-Françoise<br />
-                  13002 Marseille
+                <p className="text-stone-400 whitespace-pre-line">
+                  {footerData.address}
                 </p>
               </div>
               <div className="flex items-center gap-2">
                 <Phone className="w-4 h-4 flex-shrink-0 text-[#6b4f3a]" />
-                <a href="tel:0781075108" className="text-stone-400 hover:text-white transition-colors">
-                  07 81 07 51 08
+                <a 
+                  href={`tel:${footerData.phoneNumber.replace(/\s/g, '')}`} 
+                  className="text-stone-400 hover:text-white transition-colors"
+                >
+                  {footerData.phoneNumber}
                 </a>
               </div>
             </div>
@@ -37,9 +82,9 @@ export default function Footer() {
               <div className="flex items-start gap-2">
                 <Clock className="w-4 h-4 mt-1 flex-shrink-0 text-[#6b4f3a]" />
                 <div>
-                  <p>Mardi - Dimanche</p>
-                  <p className="font-semibold text-white">9h - 23h30</p>
-                  <p className="mt-2">Lundi : Fermé</p>
+                  <p>{footerData.hours.weekdays}</p>
+                  <p className="font-semibold text-white">{footerData.hours.hours}</p>
+                  <p className="mt-2">{footerData.hours.closed}</p>
                 </div>
               </div>
             </div>
@@ -48,19 +93,19 @@ export default function Footer() {
           <div>
             <h4 className="font-semibold text-lg mb-4 text-[#6b4f3a]">Suivez-nous</h4>
             <a
-              href="https://www.instagram.com/lecomptoirauxhuiles/"
+              href={footerData.instagram}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 text-stone-400 hover:text-white transition-colors text-sm"
             >
               <Instagram className="w-5 h-5 text-[#6b4f3a]" />
-              @lecomptoirauxhuiles
+              {footerData.instagramHandle}
             </a>
           </div>
         </div>
 
         <div className="border-t border-stone-800 pt-8 text-center text-sm text-stone-500">
-          <p>&copy; {new Date().getFullYear()} Le Comptoir Aux Huiles. Tous droits réservés.</p>
+          <p>&copy; {new Date().getFullYear()} {footerData.restaurantName}. Tous droits réservés.</p>
           <a
             href="https://www.vasseo.com/"
             target="_blank"

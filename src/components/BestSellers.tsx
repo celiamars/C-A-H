@@ -1,31 +1,46 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import MenuModal from './MenuModal';
-
-const dishes = [
-  {
-    name: 'Planche à Partager',
-    description: 'Sélection de charcuteries corses, fromages et produits du terroir',
-    image: 'https://lh3.googleusercontent.com/pw/AP1GczPFe0wR_tN9DsgOC9il_QtQlqueAxbzvsT29ph65pBvSCyEZJKKmR0OVhomYKfaDvrpwHHPtP9OovcTkVpvJKC1zcceuoWJFdgeFv3K9RO1es1k8AjJyCv5U_4KR_NwkXUU8JAw9crk7GpQdkrinOop=w719-h958-s-no-gm?authuser=1'
-  },
-  {
-    name: 'Magret de Canard',
-    description: 'Magret rôti, accompagné de ses légumes de saison',
-    image: 'https://lh3.googleusercontent.com/pw/AP1GczPxZRigmv6Kr9oQrgzAU99soJN21AJCSdyWe_HY6B-nShW6_s_dC3FmX-6h6LXSx3vInoMWr_QZiwjQ-NnKhK8gALfq6zoHIei-qKFIi4q4NZ-N42ygjp3gGoCsMk-Uf2jaQrQeuTXva-p9-SisjLR1=w983-h958-s-no-gm?authuser=1'
-  },
-  {
-    name: 'Tartare de Saumon',
-    description: 'Saumon frais mariné, avocat et condiments maison',
-    image: 'https://lh3.googleusercontent.com/pw/AP1GczONSlF6iSEYmn7AGrhEfdgV8nabYUP4Js8tyCnCwZGvpCQy1ei00mp69xO5HtilJAnJnj0oukKjAz7dnFUXpWAvBCK1R_Qk28QhcdYT1mvGZwtCKkBUjeCWRNpEty5prq6PHwTQHF02wN7YemmVDn2J=w684-h958-s-no-gm?authuser=1'
-  },
-  {
-    name: 'Burger Corse',
-    description: 'Pain artisanal, steak de bœuf, charcuterie corse et brocciu',
-    image: 'https://lh3.googleusercontent.com/pw/AP1GczNw4pIMP38skO7aZpF8gYLhoo04QcGtIppmfldwdWxW7i7WZ3gvlq-63fBIu2zurUIVVDhqycCKXPIXMNUvgnfzMEtk9lHJwVHx-i3M5eMAShxoHkDM0Y3YEjfc49Tn49XjsdD2LuirtyLJLdFmfIKV=w930-h958-s-no-gm?authuser=1'
-  }
-];
+import { client, urlFor } from '../lib/sanity';
+import type { BestSeller } from '../types/sanity';
 
 export default function BestSellers() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [dishes, setDishes] = useState<BestSeller[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBestSellers = async () => {
+      try {
+        const data = await client.fetch<BestSeller[]>(
+          `*[_type == "bestSeller"] | order(order asc) {
+            _id,
+            name,
+            description,
+            image,
+            order
+          }`
+        );
+        setDishes(data);
+      } catch (error) {
+        console.error('Error fetching best sellers:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBestSellers();
+  }, []);
+
+  if (loading) {
+    return (
+      <section id="menu" className="py-20 px-4 bg-stone-900 text-white">
+        <div className="max-w-6xl mx-auto text-center">
+          <div className="text-xl">Chargement...</div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section id="menu" className="py-20 px-4 bg-stone-900 text-white">
       <div className="max-w-6xl mx-auto">
@@ -40,15 +55,15 @@ export default function BestSellers() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {dishes.map((dish, index) => (
+          {dishes.map((dish) => (
             <button
-              key={index}
+              key={dish._id}
               onClick={() => setIsMenuOpen(true)}
               className="group relative overflow-hidden bg-stone-800 hover:shadow-2xl transition-all duration-500 text-left cursor-pointer"
             >
               <div className="relative h-56 overflow-hidden">
                 <img
-                  src={dish.image}
+                  src={urlFor(dish.image).width(400).height(300).url()}
                   alt={dish.name}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                 />

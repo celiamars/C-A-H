@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import About from './components/About';
@@ -10,10 +11,12 @@ import GroupReservation from './components/GroupReservation';
 import MapSection from './components/MapSection';
 import Footer from './components/Footer';
 import MenuModal from './components/MenuModal';
+import StudioPage from './components/StudioPage';
 
-function App() {
+function MainApp() {
   const [loading, setLoading] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -35,7 +38,8 @@ function App() {
     setIsMenuOpen(false);
   };
 
-  if (loading) {
+  // Don't show loading screen for studio route
+  if (loading && location.pathname !== '/studio') {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-black">
         <img
@@ -48,19 +52,35 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-stone-50">
-      <Navbar />
-      <Hero onReserve={openReservation} onMenuClick={openMenu} />
-      <BestSellers />
-      <RestaurantSection />
-      <EpicerieSection />
-      <About />
-      <Reviews />
-      <GroupReservation />
-      <MapSection />
-      <Footer />
-      <MenuModal isOpen={isMenuOpen} onClose={closeMenu} />
-    </div>
+    <Routes>
+      <Route path="/studio" element={<StudioPage />} />
+      <Route
+        path="/"
+        element={
+          <div className="min-h-screen bg-stone-50">
+            <Navbar />
+            <Hero onReserve={openReservation} onMenuClick={openMenu} />
+            <BestSellers />
+            <RestaurantSection />
+            <EpicerieSection />
+            <About />
+            <Reviews />
+            <GroupReservation />
+            <MapSection />
+            <Footer />
+            <MenuModal isOpen={isMenuOpen} onClose={closeMenu} />
+          </div>
+        }
+      />
+    </Routes>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <MainApp />
+    </BrowserRouter>
   );
 }
 

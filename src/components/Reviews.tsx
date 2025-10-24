@@ -1,57 +1,37 @@
 import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
-import { useState } from 'react';
-
-const reviews = [
-  {
-    name: 'Marie L.',
-    text: 'Un lieu authentique avec une âme ! La terrasse est magnifique et les plats sont délicieux. Le magret de canard était parfait.',
-    rating: 5
-  },
-  {
-    name: 'Jean-Pierre M.',
-    text: 'Excellente découverte dans le Panier. L\'ambiance chaleureuse et les produits corses font toute la différence. À recommander !',
-    rating: 5
-  },
-  {
-    name: 'Sophie D.',
-    text: 'Le meilleur restaurant du quartier ! Service impeccable, cuisine savoureuse et leurs huiles d\'olive sont exceptionnelles.',
-    rating: 5
-  },
-  {
-    name: 'Antoine R.',
-    text: 'Cadre magnifique dans un ancien four à pain. La planche à partager est généreuse et les vins sont très bien choisis.',
-    rating: 5
-  },
-  {
-    name: 'Isabelle P.',
-    text: 'Un endroit parfait pour un déjeuner en terrasse. Les saveurs corses sont sublimées et l\'accueil est très chaleureux.',
-    rating: 5
-  },
-  {
-    name: 'Thomas B.',
-    text: 'Le burger corse est une tuerie ! L\'atmosphère du lieu est unique avec ses matériaux authentiques. Une belle expérience.',
-    rating: 5
-  },
-  {
-    name: 'Claire G.',
-    text: 'Restaurant idéal pour les groupes. Nous étions 12 personnes et le service était parfait. La cuisine est excellente !',
-    rating: 5
-  },
-  {
-    name: 'Nicolas F.',
-    text: 'Le tartare de saumon est d\'une fraîcheur exceptionnelle. L\'huile d\'olive est un bon produit à emporter.',
-    rating: 5
-  },
-  {
-    name: 'Amélie V.',
-    text: 'Lieu magique qui allie tradition et convivialité. La cave à vin propose d\'excellents accords. Je reviendrai sans hésiter !',
-    rating: 5
-  }
-];
+import { useState, useEffect } from 'react';
+import { client } from '../lib/sanity';
+import type { Review } from '../types/sanity';
 
 export default function Reviews() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [loading, setLoading] = useState(true);
   const reviewsPerPage = 3;
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const data = await client.fetch<Review[]>(
+          `*[_type == "review"] | order(order asc) {
+            _id,
+            name,
+            text,
+            rating,
+            order
+          }`
+        );
+        setReviews(data);
+      } catch (error) {
+        console.error('Error fetching reviews:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchReviews();
+  }, []);
+
   const totalPages = Math.ceil(reviews.length / reviewsPerPage);
 
   const nextReviews = () => {
@@ -66,6 +46,16 @@ export default function Reviews() {
   };
 
   const visibleReviews = reviews.slice(currentIndex, currentIndex + reviewsPerPage);
+
+  if (loading) {
+    return (
+      <section id="avis" className="py-20 px-4 bg-white">
+        <div className="max-w-6xl mx-auto text-center">
+          <div className="text-xl">Chargement...</div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="avis" className="py-20 px-4 bg-white">
@@ -102,9 +92,9 @@ export default function Reviews() {
           </button>
 
           <div className="grid md:grid-cols-3 gap-6">
-            {visibleReviews.map((review, index) => (
+            {visibleReviews.map((review) => (
               <div
-                key={currentIndex + index}
+                key={review._id}
                 className="bg-stone-50 p-6 border-l-4 border-[#6b4f3a] hover:shadow-lg transition-shadow duration-300"
               >
                 <div className="flex gap-1 mb-3">
