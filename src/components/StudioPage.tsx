@@ -1,11 +1,14 @@
+import { useEffect } from 'react';
+
 export default function StudioPage() {
+  useEffect(() => {
+    // Redirect to your Sanity hosted studio
+    window.location.href = 'https://comptoir-aux-huiles.sanity.studio';
+  }, []);
+
   return (
-    <div className="w-full h-screen">
-      <iframe
-        src="https://comptoir-aux-huiles.sanity.studio"
-        className="w-full h-full border-0"
-        title="Sanity Studio"
-      />
+    <div className="flex items-center justify-center h-screen bg-stone-900 text-white">
+      <div className="text-xl">Redirection vers le Studio...</div>
     </div>
   );
 }
