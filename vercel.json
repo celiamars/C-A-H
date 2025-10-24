@@ -1,8 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/studio",
-      "destination": "/studio"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ],
   "env": {
