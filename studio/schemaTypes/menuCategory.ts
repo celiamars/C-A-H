@@ -20,8 +20,7 @@ export default defineType({
       name: 'icon',
       title: 'Icon Name',
       type: 'string',
-      description: 'Lucide icon name (e.g., "salad", "fish", "beef")',
-      validation: (Rule) => Rule.required(),
+      description: 'Lucide icon name (e.g., "salad", "fish", "beef", "Hamburger")',
     }),
     defineField({
       name: 'order',
