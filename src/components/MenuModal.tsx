@@ -17,28 +17,28 @@ interface MenuData {
 // Icône burger personnalisée
 function BurgerIcon({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      {/* Pain supérieur - arc arrondi */}
-      <path d="M15 35 C15 22 25 15 40 15 C55 15 65 22 65 35" strokeWidth="3"/>
+    <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      {/* Pain supérieur */}
+      <path d="M12 42 C12 24 22 14 50 14 C78 14 88 24 88 42" strokeWidth="3.8"/>
       
-      {/* Graines - petits traits */}
-      <line x1="25" y1="22" x2="26" y2="22" strokeWidth="3.5"/>
-      <line x1="33" y1="19" x2="34" y2="19" strokeWidth="3.5"/>
-      <line x1="40" y1="18" x2="41" y2="18" strokeWidth="3.5"/>
-      <line x1="47" y1="19" x2="48" y2="19" strokeWidth="3.5"/>
-      <line x1="55" y1="22" x2="56" y2="22" strokeWidth="3.5"/>
+      {/* Graines */}
+      <line x1="28" y1="24" x2="30" y2="24" strokeWidth="4.5"/>
+      <line x1="40" y1="20" x2="42" y2="20" strokeWidth="4.5"/>
+      <line x1="50" y1="18" x2="52" y2="18" strokeWidth="4.5"/>
+      <line x1="60" y1="20" x2="62" y2="20" strokeWidth="4.5"/>
+      <line x1="72" y1="24" x2="74" y2="24" strokeWidth="4.5"/>
       
-      {/* Laitue - ligne simple */}
-      <line x1="15" y1="40" x2="65" y2="40" strokeWidth="2.5"/>
+      {/* Laitue */}
+      <line x1="12" y1="48" x2="88" y2="48" strokeWidth="3.2"/>
       
-      {/* Steak - rectangle arrondi */}
-      <rect x="15" y="44" width="50" height="8" rx="2" strokeWidth="3"/>
+      {/* Steak */}
+      <rect x="12" y="53" width="76" height="12" rx="2" strokeWidth="3.8"/>
       
-      {/* Fromage - ligne */}
-      <line x1="15" y1="56" x2="65" y2="56" strokeWidth="2.5"/>
+      {/* Fromage */}
+      <line x1="12" y1="70" x2="88" y2="70" strokeWidth="3.2"/>
       
-      {/* Pain inférieur - rectangle bien arrondi */}
-      <rect x="12" y="60" width="56" height="8" rx="4" strokeWidth="3"/>
+      {/* Pain inférieur */}
+      <rect x="10" y="75" width="80" height="12" rx="6" strokeWidth="3.8"/>
     </svg>
   );
 }
@@ -90,7 +90,7 @@ export default function MenuModal({ isOpen, onClose }: MenuModalProps) {
     // Cas spécial pour burger
     const lowerName = iconName.toLowerCase();
     if (lowerName === 'sandwich' || lowerName === 'burger' || lowerName === 'hamburger') {
-      return <BurgerIcon className="w-5 h-5 md:w-6 md:h-6" />;
+      return <BurgerIcon className="w-8 h-8 md:w-9 md:h-9" />;
     }
     
     const normalizedName = iconName.charAt(0).toUpperCase() + iconName.slice(1);
