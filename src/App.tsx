@@ -12,6 +12,7 @@ import MapSection from './components/MapSection';
 import Footer from './components/Footer';
 import MenuModal from './components/MenuModal';
 import StudioPage from './components/StudioPage';
+import ContactMapSection from './components/ContactMapSection';
 
 function MainApp() {
   const [loading, setLoading] = useState(true);
@@ -64,8 +65,8 @@ function MainApp() {
             <EpicerieSection />
             <About />
             <Reviews />
-            <GroupReservation />
-            <MapSection />
+            <ContactMapSection /> 
+            
             <Footer />
             <MenuModal isOpen={isMenuOpen} onClose={closeMenu} />
           </div>

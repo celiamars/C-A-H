@@ -50,33 +50,31 @@ export default function About() {
 
   if (loading || !aboutData) {
     return (
-      <section id="about" className="py-20 px-4 bg-stone-900 text-white">
-        <div className="max-w-6xl mx-auto text-center">
-          <div className="text-xl">Chargement...</div>
-        </div>
+      <section id="about" className="min-h-screen flex items-center justify-center bg-stone-900 text-white px-4">
+        <div className="text-xl">Chargement...</div>
       </section>
     );
   }
 
   return (
-    <section id="about" className="py-20 px-4 bg-stone-900 text-white">
-      <div className="max-w-6xl mx-auto">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div className="space-y-6">
-            <h2 className="font-serif text-4xl md:text-5xl">
+    <section id="about" className="min-h-screen flex items-center py-12 md:py-20 px-4 bg-stone-900 text-white">
+      <div className="max-w-6xl mx-auto w-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
+          <div className="space-y-4 md:space-y-6">
+            <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl">
               {aboutData.title}
             </h2>
-            <div className="w-20 h-1 bg-[#6b4f3a]"></div>
-            <p className="text-lg text-stone-300 leading-relaxed">
+            <div className="w-16 md:w-20 h-1 bg-[#6b4f3a]"></div>
+            <p className="text-sm md:text-base lg:text-lg text-stone-300 leading-relaxed">
               {aboutData.paragraph1}
             </p>
-            <p className="text-lg text-stone-300 leading-relaxed">
+            <p className="text-sm md:text-base lg:text-lg text-stone-300 leading-relaxed">
               {aboutData.paragraph2}
             </p>
           </div>
 
           <div className="relative">
-            <div className="relative h-[480px] overflow-hidden shadow-lg">
+            <div className="relative h-64 md:h-96 lg:h-[480px] overflow-hidden shadow-lg">
               {aboutData.images.map((image, index) => (
                 <img
                   key={index}
@@ -91,29 +89,29 @@ export default function About() {
               <button
                 onClick={previousImage}
                 className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60
-                           text-white p-2 rounded-full backdrop-blur-sm transition-all duration-300"
+                           text-white p-1.5 md:p-2 rounded-full backdrop-blur-sm transition-all duration-300"
                 aria-label="Image précédente"
               >
-                <ChevronLeft className="w-5 h-5" />
+                <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
               </button>
 
               <button
                 onClick={nextImage}
                 className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60
-                           text-white p-2 rounded-full backdrop-blur-sm transition-all duration-300"
+                           text-white p-1.5 md:p-2 rounded-full backdrop-blur-sm transition-all duration-300"
                 aria-label="Image suivante"
               >
-                <ChevronRight className="w-5 h-5" />
+                <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
               </button>
 
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+              <div className="absolute bottom-3 md:bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 md:gap-2">
                 {aboutData.images.map((_, index) => (
                   <button
                     key={index}
                     onClick={() => setCurrentImageIndex(index)}
-                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                    className={`w-1.5 h-1.5 md:w-2 md:h-2 rounded-full transition-all duration-300 ${
                       index === currentImageIndex
-                        ? 'bg-white w-6'
+                        ? 'bg-white w-4 md:w-6'
                         : 'bg-white/50 hover:bg-white/75'
                     }`}
                     aria-label={`Aller à l'image ${index + 1}`}

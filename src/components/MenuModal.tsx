@@ -17,21 +17,28 @@ interface MenuData {
 // Icône burger personnalisée
 function BurgerIcon({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 64 64" fill="currentColor" className={className}>
-      {/* Pain supérieur - plus grand */}
-      <path d="M32 8 C16 8 6 16 6 28 L58 28 C58 16 48 8 32 8 Z"/>
+    <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      {/* Pain supérieur - arc arrondi */}
+      <path d="M15 35 C15 22 25 15 40 15 C55 15 65 22 65 35" strokeWidth="3"/>
       
-      {/* Laitue - plus épaisse */}
-      <ellipse cx="32" cy="32" rx="26" ry="4" opacity="0.9"/>
+      {/* Graines - petits traits */}
+      <line x1="25" y1="22" x2="26" y2="22" strokeWidth="3.5"/>
+      <line x1="33" y1="19" x2="34" y2="19" strokeWidth="3.5"/>
+      <line x1="40" y1="18" x2="41" y2="18" strokeWidth="3.5"/>
+      <line x1="47" y1="19" x2="48" y2="19" strokeWidth="3.5"/>
+      <line x1="55" y1="22" x2="56" y2="22" strokeWidth="3.5"/>
       
-      {/* Steak épais avec ondulations - plus grand */}
-      <path d="M6 38 C6 38 8 34 16 34 L24 38 L32 34 L40 38 L48 34 C56 34 58 38 58 38 L58 44 C58 46 56 48 54 48 L10 48 C8 48 6 46 6 44 Z"/>
+      {/* Laitue - ligne simple */}
+      <line x1="15" y1="40" x2="65" y2="40" strokeWidth="2.5"/>
       
-      {/* Fromage - plus épais */}
-      <ellipse cx="32" cy="51" rx="26" ry="3" opacity="0.85"/>
+      {/* Steak - rectangle arrondi */}
+      <rect x="15" y="44" width="50" height="8" rx="2" strokeWidth="3"/>
       
-      {/* Pain inférieur - plus grand */}
-      <rect x="4" y="53" width="56" height="8" rx="4"/>
+      {/* Fromage - ligne */}
+      <line x1="15" y1="56" x2="65" y2="56" strokeWidth="2.5"/>
+      
+      {/* Pain inférieur - rectangle bien arrondi */}
+      <rect x="12" y="60" width="56" height="8" rx="4" strokeWidth="3"/>
     </svg>
   );
 }

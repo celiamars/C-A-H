@@ -49,33 +49,31 @@ export default function Reviews() {
 
   if (loading) {
     return (
-      <section id="avis" className="py-20 px-4 bg-white">
-        <div className="max-w-6xl mx-auto text-center">
-          <div className="text-xl">Chargement...</div>
-        </div>
+      <section id="avis" className="min-h-screen flex items-center justify-center bg-white px-4">
+        <div className="text-xl">Chargement...</div>
       </section>
     );
   }
 
   return (
-    <section id="avis" className="py-20 px-4 bg-white">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
+    <section id="avis" className="min-h-screen flex items-center py-12 md:py-20 px-4 bg-white">
+      <div className="max-w-6xl mx-auto w-full">
+        <div className="text-center mb-8 md:mb-12 lg:mb-16">
           <img
             src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png"
             alt="Google"
-            className="h-10 mx-auto mb-6 opacity-80"
+            className="h-8 md:h-10 mx-auto mb-4 md:mb-6 opacity-80"
           />
-          <h2 className="font-serif text-4xl md:text-5xl text-stone-900 mb-4">
+          <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-stone-900 mb-3 md:mb-4">
             Avis Clients
           </h2>
-          <div className="w-20 h-1 bg-[#6b4f3a] mx-auto mb-6"></div>
-          <div className="flex items-center justify-center gap-2 mb-2">
+          <div className="w-16 md:w-20 h-1 bg-[#6b4f3a] mx-auto mb-4 md:mb-6"></div>
+          <div className="flex items-center justify-center gap-1.5 md:gap-2 mb-2">
             {[...Array(5)].map((_, i) => (
-              <Star key={i} className="w-6 h-6 fill-[#6b4f3a] text-[#6b4f3a]" />
+              <Star key={i} className="w-5 h-5 md:w-6 md:h-6 fill-[#6b4f3a] text-[#6b4f3a]" />
             ))}
           </div>
-          <p className="text-xl text-stone-600">
+          <p className="text-base md:text-lg lg:text-xl text-stone-600">
             Note moyenne 5/5 basée sur nos clients
           </p>
         </div>
@@ -83,29 +81,29 @@ export default function Reviews() {
         <div className="relative">
           <button
             onClick={prevReviews}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-12 z-10
-                       bg-[#6b4f3a] text-white p-3 rounded-full hover:bg-[#5a4230] transition-colors
+            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 md:-translate-x-4 lg:-translate-x-12 z-10
+                       bg-[#6b4f3a] text-white p-2 md:p-3 rounded-full hover:bg-[#5a4230] transition-colors
                        shadow-lg"
             aria-label="Avis précédents"
           >
-            <ChevronLeft className="w-6 h-6" />
+            <ChevronLeft className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6" />
           </button>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
             {visibleReviews.map((review) => (
               <div
                 key={review._id}
-                className="bg-stone-50 p-6 border-l-4 border-[#6b4f3a] hover:shadow-lg transition-shadow duration-300"
+                className="bg-stone-50 p-4 md:p-6 border-l-4 border-[#6b4f3a] hover:shadow-lg transition-shadow duration-300"
               >
-                <div className="flex gap-1 mb-3">
+                <div className="flex gap-0.5 md:gap-1 mb-2 md:mb-3">
                   {[...Array(review.rating)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-[#6b4f3a] text-[#6b4f3a]" />
+                    <Star key={i} className="w-3 h-3 md:w-4 md:h-4 fill-[#6b4f3a] text-[#6b4f3a]" />
                   ))}
                 </div>
-                <p className="text-stone-700 mb-4 leading-relaxed italic">
+                <p className="text-xs md:text-sm text-stone-700 mb-3 md:mb-4 leading-relaxed italic">
                   "{review.text}"
                 </p>
-                <p className="text-stone-900 font-semibold">
+                <p className="text-sm md:text-base text-stone-900 font-semibold">
                   {review.name}
                 </p>
               </div>
@@ -114,21 +112,21 @@ export default function Reviews() {
 
           <button
             onClick={nextReviews}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-12 z-10
-                       bg-[#6b4f3a] text-white p-3 rounded-full hover:bg-[#5a4230] transition-colors
+            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 md:translate-x-4 lg:translate-x-12 z-10
+                       bg-[#6b4f3a] text-white p-2 md:p-3 rounded-full hover:bg-[#5a4230] transition-colors
                        shadow-lg"
             aria-label="Avis suivants"
           >
-            <ChevronRight className="w-6 h-6" />
+            <ChevronRight className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6" />
           </button>
         </div>
 
-        <div className="flex justify-center gap-2 mt-8">
+        <div className="flex justify-center gap-1.5 md:gap-2 mt-6 md:mt-8">
           {Array.from({ length: totalPages }).map((_, i) => (
             <button
               key={i}
               onClick={() => setCurrentIndex(i * reviewsPerPage)}
-              className={`w-3 h-3 rounded-full transition-colors ${
+              className={`w-2 h-2 md:w-3 md:h-3 rounded-full transition-colors ${
                 Math.floor(currentIndex / reviewsPerPage) === i
                   ? 'bg-[#6b4f3a]'
                   : 'bg-stone-300 hover:bg-stone-400'
