@@ -90,7 +90,8 @@ export default function MenuModal({ isOpen, onClose }: MenuModalProps) {
   const getIconComponent = (iconName: string) => {
     const lowerName = iconName.toLowerCase();
     if (lowerName === 'sandwich' || lowerName === 'burger' || lowerName === 'hamburger') {
-      return <BurgerIcon className="w-6 h-6 md:w-7 md:h-7 -translate-y-2" />;
+      return <BurgerIcon className="w-6 h-6 md:w-7 md:h-7 -translate-y-0.3" />;
+
     }
     
     const normalizedName = iconName.charAt(0).toUpperCase() + iconName.slice(1);
