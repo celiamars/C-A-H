@@ -32,41 +32,41 @@ export default function ContactMapSection() {
 
   if (loading || !groupData) {
     return (
-      <section id="groupes" className="min-h-screen bg-[#f5f0ea] flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-base">Chargement...</div>
+      <section id="groupes" className="py-16 bg-[#f5f0ea]">
+        <div className="max-w-4xl mx-auto text-center px-4">
+          <div className="text-lg">Chargement...</div>
         </div>
       </section>
     );
   }
 
   return (
-    <section id="groupes" className="min-h-screen bg-[#f5f0ea] flex flex-col">
-      {/* Group Reservation Section - Top Half */}
-      <div className="flex-1 flex items-center justify-center py-6 md:py-8 px-4">
-        <div className="max-w-4xl mx-auto text-center w-full">
-          <h2 className="font-serif text-xl md:text-3xl lg:text-4xl mb-2 md:mb-3 text-stone-900">
+    <section id="groupes" className="bg-[#f5f0ea]">
+      {/* Group Reservation Section - Compact */}
+      <div className="py-8 md:py-12 px-4">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="font-serif text-2xl md:text-4xl lg:text-5xl mb-3 md:mb-4 text-stone-900">
             {groupData.title}
           </h2>
-          <div className="w-12 md:w-16 h-0.5 bg-[#6b4f3a] mx-auto mb-3 md:mb-4"></div>
-          <p className="text-sm md:text-base lg:text-lg text-stone-600 mb-4 md:mb-6 max-w-2xl mx-auto px-2">
+          <div className="w-16 md:w-20 h-0.5 md:h-1 bg-[#6b4f3a] mx-auto mb-4 md:mb-5"></div>
+          <p className="text-base md:text-lg lg:text-xl text-stone-600 mb-6 md:mb-8 max-w-2xl mx-auto leading-relaxed">
             {groupData.description}
           </p>
           <div className="flex justify-center">
             <a
               href={`tel:${groupData.phoneNumber.replace(/\s/g, '')}`}
-              className="bg-[#6b4f3a] text-white px-5 md:px-7 py-2.5 md:py-3 text-sm md:text-base font-medium
-                         hover:bg-[#5a4230] transition-all duration-300 flex items-center gap-2 rounded-sm shadow-lg"
+              className="bg-[#6b4f3a] text-white px-7 md:px-8 py-3 md:py-4 text-base md:text-lg font-medium
+                         hover:bg-[#5a4230] transition-all duration-300 flex items-center gap-2 md:gap-3 shadow-lg"
             >
-              <Phone className="w-4 h-4 md:w-5 md:h-5" />
+              <Phone className="w-5 h-5 md:w-6 md:h-6" />
               {groupData.phoneNumber}
             </a>
           </div>
         </div>
       </div>
 
-      {/* Map Section - Bottom Half */}
-      <div className="relative w-full h-[45vh] md:h-[50vh] min-h-[300px]">
+      {/* Map Section - Full width */}
+      <div className="relative w-full h-[50vh] md:h-[55vh] min-h-[350px]">
         <iframe
           src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2904.0839891!2d5.3684937!3d43.2991857!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12c9c0c6e0000000%3A0x0!2s38%20Rue%20Sainte-Fran%C3%A7oise%2C%2013002%20Marseille!5e0!3m2!1sen!2sfr!4v1234567890"
           width="100%"
@@ -78,16 +78,16 @@ export default function ContactMapSection() {
           title="Le Comptoir Aux Huiles Location"
           className="w-full h-full"
         />
-        <div className="absolute bottom-3 md:bottom-6 left-1/2 -translate-x-1/2 z-10 px-4">
+        <div className="absolute bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 z-10 px-4">
           <a
             href="https://maps.app.goo.gl/eyfiDi2n9mpkBmSbA?g_st=ipc"
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-[#6b4f3a] text-white px-5 md:px-7 py-2.5 md:py-3 text-sm md:text-base font-medium
-                       hover:bg-[#5a4230] transition-all duration-300 flex items-center gap-2
-                       shadow-2xl rounded-sm whitespace-nowrap"
+            className="bg-[#6b4f3a] text-white px-6 md:px-8 py-3 md:py-4 text-base md:text-lg font-medium
+                       hover:bg-[#5a4230] transition-all duration-300 flex items-center gap-2 md:gap-3
+                       shadow-2xl whitespace-nowrap"
           >
-            <MapPin className="w-4 h-4 md:w-5 md:h-5" />
+            <MapPin className="w-5 h-5 md:w-6 md:h-6" />
             <span className="hidden sm:inline">Obtenir l'itinéraire</span>
             <span className="sm:hidden">Itinéraire</span>
           </a>

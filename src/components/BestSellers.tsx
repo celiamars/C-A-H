@@ -34,49 +34,49 @@ export default function BestSellers() {
 
   if (loading) {
     return (
-      <section id="menu" className="py-8 px-4 bg-stone-900 text-white min-h-screen flex items-center">
-        <div className="max-w-6xl mx-auto text-center w-full">
-          <div className="text-base">Chargement...</div>
+      <section id="menu" className="py-16 px-4 bg-stone-900 text-white">
+        <div className="max-w-6xl mx-auto text-center">
+          <div className="text-lg">Chargement...</div>
         </div>
       </section>
     );
   }
 
   return (
-    <section id="menu" className="py-6 md:py-12 px-3 md:px-4 bg-stone-900 text-white min-h-screen flex items-center">
-      <div className="max-w-6xl mx-auto w-full">
-        {/* Header - Compact */}
-        <div className="text-center mb-4 md:mb-8">
-          <h2 className="font-serif text-xl md:text-3xl lg:text-4xl mb-2 md:mb-3">
+    <section id="menu" className="py-10 md:py-16 px-4 bg-stone-900 text-white">
+      <div className="max-w-6xl mx-auto">
+        {/* Header - Compact but readable */}
+        <div className="text-center mb-6 md:mb-10">
+          <h2 className="font-serif text-2xl md:text-4xl lg:text-5xl mb-3 md:mb-4">
             Nos Incontournables
           </h2>
-          <div className="w-12 md:w-16 h-0.5 bg-[#6b4f3a] mx-auto mb-2 md:mb-4"></div>
-          <p className="text-sm md:text-base text-stone-300 max-w-2xl mx-auto px-2">
+          <div className="w-16 md:w-20 h-0.5 md:h-1 bg-[#6b4f3a] mx-auto mb-3 md:mb-5"></div>
+          <p className="text-sm md:text-lg lg:text-xl text-stone-300 max-w-2xl mx-auto px-2">
             Découvrez nos plats signatures
           </p>
         </div>
 
-        {/* Grid - 2 columns on mobile for compactness */}
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4">
+        {/* Grid - 2 columns on mobile, better sized */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-5">
           {dishes.map((dish) => (
             <button
               key={dish._id}
               onClick={() => setIsMenuOpen(true)}
-              className="group relative overflow-hidden bg-stone-800 hover:shadow-xl transition-all duration-300 text-left cursor-pointer rounded-sm"
+              className="group relative overflow-hidden bg-stone-800 hover:shadow-2xl transition-all duration-500 text-left cursor-pointer"
             >
-              <div className="relative h-32 md:h-44 lg:h-52 overflow-hidden">
+              <div className="relative h-40 md:h-48 lg:h-56 overflow-hidden">
                 <img
-                  src={urlFor(dish.image).width(300).height(250).url()}
+                  src={urlFor(dish.image).width(400).height(350).url()}
                   alt={dish.name}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-stone-900 via-stone-900/40 to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-stone-900 via-stone-900/50 to-transparent"></div>
               </div>
-              <div className="p-2 md:p-3">
-                <h3 className="text-sm md:text-base lg:text-lg font-serif mb-1 text-amber-50 line-clamp-1">
+              <div className="p-3 md:p-4">
+                <h3 className="text-base md:text-lg lg:text-xl font-serif mb-1 md:mb-2 text-amber-50">
                   {dish.name}
                 </h3>
-                <p className="text-stone-300 leading-snug text-xs md:text-sm line-clamp-2">
+                <p className="text-stone-300 leading-relaxed text-xs md:text-sm line-clamp-2">
                   {dish.description}
                 </p>
               </div>
@@ -84,11 +84,11 @@ export default function BestSellers() {
           ))}
         </div>
 
-        {/* Button - Compact */}
-        <div className="text-center mt-4 md:mt-8">
+        {/* Button */}
+        <div className="text-center mt-6 md:mt-10">
           <button
             onClick={() => setIsMenuOpen(true)}
-            className="bg-[#6b4f3a] text-white px-5 md:px-7 py-2.5 md:py-3 text-sm md:text-base font-medium hover:bg-[#5a4230] transition-all duration-300 shadow-lg hover:shadow-xl rounded-sm"
+            className="bg-[#6b4f3a] text-white px-7 md:px-8 py-3 md:py-4 text-base md:text-lg font-medium hover:bg-[#5a4230] transition-all duration-300 shadow-lg hover:shadow-xl"
           >
             Découvrir Notre Menu
           </button>

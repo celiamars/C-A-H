@@ -1,3 +1,4 @@
+// src/components/About.tsx
 import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { client, urlFor } from '../lib/sanity';
@@ -50,21 +51,24 @@ export default function About() {
 
   if (loading || !aboutData) {
     return (
-      <section id="about" className="min-h-screen flex items-center justify-center bg-stone-900 text-white px-4">
-        <div className="text-xl">Chargement...</div>
+      <section id="about" className="py-16 px-4 bg-stone-900 text-white">
+        <div className="max-w-6xl mx-auto text-center">
+          <div className="text-lg">Chargement...</div>
+        </div>
       </section>
     );
   }
 
   return (
-    <section id="about" className="min-h-screen flex items-center py-12 md:py-20 px-4 bg-stone-900 text-white">
-      <div className="max-w-6xl mx-auto w-full">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
-          <div className="space-y-4 md:space-y-6">
-            <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl">
+    <section id="about" className="py-10 md:py-16 px-4 bg-stone-900 text-white">
+      <div className="max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-center">
+          {/* Text Content */}
+          <div className="space-y-3 md:space-y-5">
+            <h2 className="font-serif text-2xl md:text-4xl lg:text-5xl">
               {aboutData.title}
             </h2>
-            <div className="w-16 md:w-20 h-1 bg-[#6b4f3a]"></div>
+            <div className="w-16 md:w-20 h-0.5 md:h-1 bg-[#6b4f3a]"></div>
             <p className="text-sm md:text-base lg:text-lg text-stone-300 leading-relaxed">
               {aboutData.paragraph1}
             </p>
@@ -73,12 +77,13 @@ export default function About() {
             </p>
           </div>
 
+          {/* Image Gallery */}
           <div className="relative">
-            <div className="relative h-64 md:h-96 lg:h-[480px] overflow-hidden shadow-lg">
+            <div className="relative h-64 md:h-80 lg:h-96 overflow-hidden shadow-lg">
               {aboutData.images.map((image, index) => (
                 <img
                   key={index}
-                  src={urlFor(image).width(800).height(480).url()}
+                  src={urlFor(image).width(800).height(600).url()}
                   alt={image.alt || `Notre histoire ${index + 1}`}
                   className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
                     index === currentImageIndex ? 'opacity-100' : 'opacity-0'
@@ -86,6 +91,7 @@ export default function About() {
                 />
               ))}
 
+              {/* Navigation Buttons */}
               <button
                 onClick={previousImage}
                 className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60
@@ -104,6 +110,7 @@ export default function About() {
                 <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
               </button>
 
+              {/* Dots Indicator */}
               <div className="absolute bottom-3 md:bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 md:gap-2">
                 {aboutData.images.map((_, index) => (
                   <button
