@@ -1,3 +1,4 @@
+// src/components/MenuModal.tsx
 import { X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { client } from '../lib/sanity';
@@ -18,26 +19,15 @@ interface MenuData {
 function BurgerIcon({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      {/* Pain supérieur */}
       <path d="M12 42 C12 24 22 14 50 14 C78 14 88 24 88 42" strokeWidth="3.8"/>
-      
-      {/* Graines */}
       <line x1="28" y1="24" x2="30" y2="24" strokeWidth="4.5"/>
       <line x1="40" y1="20" x2="42" y2="20" strokeWidth="4.5"/>
       <line x1="50" y1="18" x2="52" y2="18" strokeWidth="4.5"/>
       <line x1="60" y1="20" x2="62" y2="20" strokeWidth="4.5"/>
       <line x1="72" y1="24" x2="74" y2="24" strokeWidth="4.5"/>
-      
-      {/* Laitue */}
       <line x1="12" y1="48" x2="88" y2="48" strokeWidth="3.2"/>
-      
-      {/* Steak */}
       <rect x="12" y="53" width="76" height="12" rx="2" strokeWidth="3.8"/>
-      
-      {/* Fromage */}
       <line x1="12" y1="70" x2="88" y2="70" strokeWidth="3.2"/>
-      
-      {/* Pain inférieur */}
       <rect x="10" y="75" width="80" height="12" rx="6" strokeWidth="3.8"/>
     </svg>
   );
@@ -87,25 +77,34 @@ export default function MenuModal({ isOpen, onClose }: MenuModalProps) {
   if (!isOpen) return null;
 
   const getIconComponent = (iconName: string) => {
-  const lowerName = iconName.toLowerCase();
-  if (lowerName === 'sandwich' || lowerName === 'burger' || lowerName === 'hamburger') {
-    return <BurgerIcon className="w-6 h-6 md:w-7 md:h-7 -translate-y-2" />;
-  }
-  
-  const normalizedName = iconName.charAt(0).toUpperCase() + iconName.slice(1);
-  const IconComponent = (LucideIcons as any)[normalizedName];
-  return IconComponent ? 
-    <IconComponent className="w-5 h-5 md:w-6 md:h-6" /> : 
-    <LucideIcons.Utensils className="w-5 h-5 md:w-6 md:h-6" />;
-};
+    const lowerName = iconName.toLowerCase();
+    if (lowerName === 'sandwich' || lowerName === 'burger' || lowerName === 'hamburger') {
+      return <BurgerIcon className="w-6 h-6 md:w-7 md:h-7 -translate-y-2" />;
+    }
+    
+    const normalizedName = iconName.charAt(0).toUpperCase() + iconName.slice(1);
+    const IconComponent = (LucideIcons as any)[normalizedName];
+    return IconComponent ? 
+      <IconComponent className="w-5 h-5 md:w-6 md:h-6" /> : 
+      <LucideIcons.Utensils className="w-5 h-5 md:w-6 md:h-6" />;
+  };
 
   const getItemsForCategory = (categoryId: string) => {
     return menuData.items.filter((item) => item.category._ref === categoryId);
   };
 
-  const midPoint = Math.ceil(menuData.categories.length / 2);
-  const leftCategories = menuData.categories.slice(0, midPoint);
-  const rightCategories = menuData.categories.slice(midPoint);
+  // Catégories de gauche: Entrées, Pâtes, Poissons, Salades
+  const leftCategoryTitles = ['Entrées', 'Pâtes', 'Poissons', 'Salades'];
+  const leftCategories = menuData.categories.filter(cat => 
+    leftCategoryTitles.includes(cat.title)
+  ).sort((a, b) => {
+    return leftCategoryTitles.indexOf(a.title) - leftCategoryTitles.indexOf(b.title);
+  });
+
+  // Catégories de droite: tout le reste
+  const rightCategories = menuData.categories.filter(cat => 
+    !leftCategoryTitles.includes(cat.title)
+  );
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto" onClick={onClose}>
@@ -132,6 +131,7 @@ export default function MenuModal({ isOpen, onClose }: MenuModalProps) {
               </div>
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 lg:gap-12">
+                {/* Colonne de gauche: Entrées, Pâtes, Poissons, Salades */}
                 <div className="space-y-6 md:space-y-8">
                   {leftCategories.map((category) => (
                     <MenuSection
@@ -144,6 +144,7 @@ export default function MenuModal({ isOpen, onClose }: MenuModalProps) {
                   ))}
                 </div>
 
+                {/* Colonne de droite: Tout le reste */}
                 <div className="lg:border-l lg:border-stone-700 lg:pl-12 space-y-6 md:space-y-8">
                   {rightCategories.map((category) => (
                     <MenuSection
