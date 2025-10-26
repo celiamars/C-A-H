@@ -1,8 +1,9 @@
 import hero from './hero'
 import about from './about'
 import bestSeller from './bestSeller'
-import menuItem from './menuItem'
-import menuCategory from './menuCategory'
+import menu from './menu'  // NOUVEAU
+// import menuItem from './menuItem'  // COMMENTÉ
+// import menuCategory from './menuCategory'  // COMMENTÉ
 import restaurant from './restaurant'
 import epicerie from './epicerie'
 import review from './review'
@@ -13,8 +14,9 @@ export const schemaTypes = [
   hero,
   about,
   bestSeller,
-  menuItem,
-  menuCategory,
+  menu,  // NOUVEAU
+  // menuItem,  // COMMENTÉ
+  // menuCategory,  // COMMENTÉ
   restaurant,
   epicerie,
   review,

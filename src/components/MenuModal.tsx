@@ -1,7 +1,7 @@
 import { X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { client } from '../lib/sanity';
-import type { MenuItem, MenuCategory } from '../types/sanity';
+import type { MenuItemNested, MenuCategoryNested, Menu } from '../types/sanity';
 import * as LucideIcons from 'lucide-react';
 
 interface MenuModalProps {
@@ -10,8 +10,8 @@ interface MenuModalProps {
 }
 
 interface MenuData {
-  categories: MenuCategory[];
-  items: MenuItem[];
+  categories: MenuCategoryNested[];
+  items?: never; // Pas utilisé
 }
 
 // Icône burger personnalisée
@@ -37,41 +37,51 @@ export default function MenuModal({ isOpen, onClose }: MenuModalProps) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchMenu = async () => {
-      try {
-        const [categories, items] = await Promise.all([
-          client.fetch<MenuCategory[]>(
-            `*[_type == "menuCategory"] | order(order asc) {
-              _id,
-              title,
-              subtitle,
-              icon,
-              order
-            }`
-          ),
-          client.fetch<MenuItem[]>(
-            `*[_type == "menuItem"] | order(order asc) {
-              _id,
+  const fetchMenu = async () => {
+    try {
+      const menuDoc = await client.fetch<Menu>(
+        `*[_type == "menu"][0]{
+          _id,
+          title,
+          categories[]{
+            title,
+            subtitle,
+            icon,
+            order,
+            items[]{
               name,
               price,
               description,
-              category,
               order
-            }`
-          ),
-        ]);
-        setMenuData({ categories, items });
-      } catch (error) {
-        console.error('Error fetching menu data:', error);
-      } finally {
-        setLoading(false);
+            }
+          }
+        }`
+      );
+      
+      if (menuDoc) {
+        // Trier les catégories par ordre
+        const sortedCategories = menuDoc.categories.sort((a, b) => a.order - b.order);
+        
+        // Trier les items dans chaque catégorie
+        sortedCategories.forEach(cat => {
+          if (cat.items) {
+            cat.items.sort((a, b) => a.order - b.order);
+          }
+        });
+        
+        setMenuData({ categories: sortedCategories, items: undefined });
       }
-    };
-
-    if (isOpen) {
-      fetchMenu();
+    } catch (error) {
+      console.error('Error fetching menu data:', error);
+    } finally {
+      setLoading(false);
     }
-  }, [isOpen]);
+  };
+
+  if (isOpen) {
+    fetchMenu();
+  }
+}, [isOpen]);
 
   // Bloquer le scroll du body quand le modal est ouvert
   useEffect(() => {
@@ -101,9 +111,9 @@ export default function MenuModal({ isOpen, onClose }: MenuModalProps) {
       <LucideIcons.Utensils className="w-5 h-5 md:w-6 md:h-6" />;
   };
 
-  const getItemsForCategory = (categoryId: string) => {
-    return menuData.items.filter((item) => item.category._ref === categoryId);
-  };
+  const getItemsForCategory = (category: MenuCategoryNested) => {
+  return category.items || [];
+};
 
   // Catégories de gauche: Entrées, Pâtes, Poissons, Salades
   const leftCategoryTitles = ['Entrées', 'Pâtes', 'Poissons', 'Salades'];
@@ -159,27 +169,28 @@ export default function MenuModal({ isOpen, onClose }: MenuModalProps) {
               <>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 lg:gap-12">
                   {/* Colonne de gauche */}
+                  {/* Colonne de gauche */}
                   <div className="space-y-6 md:space-y-8">
-                    {leftCategories.map((category) => (
+                    {leftCategories.map((category, index) => (
                       <MenuSection
-                        key={category._id}
+                        key={index}
                         icon={getIconComponent(category.icon)}
                         title={category.title}
                         subtitle={category.subtitle}
-                        items={getItemsForCategory(category._id)}
+                        items={getItemsForCategory(category)}
                       />
                     ))}
                   </div>
 
                   {/* Colonne de droite */}
                   <div className="lg:border-l lg:border-stone-700 lg:pl-12 space-y-6 md:space-y-8">
-                    {rightCategories.map((category) => (
+                    {rightCategories.map((category, index) => (
                       <MenuSection
-                        key={category._id}
+                        key={index}
                         icon={getIconComponent(category.icon)}
                         title={category.title}
                         subtitle={category.subtitle}
-                        items={getItemsForCategory(category._id)}
+                        items={getItemsForCategory(category)}
                       />
                     ))}
                   </div>
@@ -199,7 +210,7 @@ interface MenuSectionProps {
   icon: React.ReactNode;
   title: string;
   subtitle?: string;
-  items: MenuItem[];
+  items: MenuItemNested[];
 }
 
 function MenuSection({ icon, title, subtitle, items }: MenuSectionProps) {
@@ -213,24 +224,24 @@ function MenuSection({ icon, title, subtitle, items }: MenuSectionProps) {
         </h3>
       </div>
       <div className="space-y-2 md:space-y-3">
-        {items.map((item) => (
-          <div key={item._id} className="border-b border-stone-800 pb-2 md:pb-3 last:border-b-0">
-            <div className="flex justify-between items-start gap-3 md:gap-4">
-              <div className="flex-1 min-w-0">
-                <p className="text-sm md:text-base text-stone-200 leading-relaxed">{item.name}</p>
-                {item.description && (
-                  <p className="text-xs md:text-sm text-stone-400 mt-1 whitespace-pre-line">{item.description}</p>
-                )}
-              </div>
-              {item.price && (
-                <span className="text-sm md:text-base text-[#6b4f3a] font-medium whitespace-nowrap flex-shrink-0">
-                  {item.price}
-                </span>
+      {items.map((item, index) => (
+        <div key={index} className="border-b border-stone-800 pb-2 md:pb-3 last:border-b-0">
+          <div className="flex justify-between items-start gap-3 md:gap-4">
+            <div className="flex-1 min-w-0">
+              <p className="text-sm md:text-base text-stone-200 leading-relaxed">{item.name}</p>
+              {item.description && (
+                <p className="text-xs md:text-sm text-stone-400 mt-1 whitespace-pre-line">{item.description}</p>
               )}
             </div>
+            {item.price && (
+              <span className="text-sm md:text-base text-[#6b4f3a] font-medium whitespace-nowrap flex-shrink-0">
+                {item.price}
+              </span>
+            )}
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
+    </div>
     </div>
   );
 }

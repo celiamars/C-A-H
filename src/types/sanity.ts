@@ -110,3 +110,24 @@ export interface Footer {
   instagramHandle: string;
   googleMapsUrl: string;
 }
+
+export interface MenuItemNested {
+  name: string;
+  price?: string;
+  description?: string;
+  order: number;
+}
+
+export interface MenuCategoryNested {
+  title: string;
+  subtitle?: string;
+  icon: string;
+  order: number;
+  items: MenuItemNested[];
+}
+
+export interface Menu {
+  _id: string;
+  title: string;
+  categories: MenuCategoryNested[];
+}
