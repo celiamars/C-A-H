@@ -1,4 +1,3 @@
-// src/components/MenuModal.tsx
 import { X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { client } from '../lib/sanity';
@@ -74,6 +73,18 @@ export default function MenuModal({ isOpen, onClose }: MenuModalProps) {
     }
   }, [isOpen]);
 
+  // Bloquer le scroll du body quand le modal est ouvert
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   const getIconComponent = (iconName: string) => {
@@ -106,57 +117,75 @@ export default function MenuModal({ isOpen, onClose }: MenuModalProps) {
     !leftCategoryTitles.includes(cat.title)
   );
 
+  const scrollToTop = () => {
+    const modalContent = document.getElementById('menu-modal-content');
+    if (modalContent) {
+      modalContent.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto" onClick={onClose}>
+    <div className="fixed inset-0 z-50 overflow-hidden" onClick={onClose}>
       <div className="fixed inset-0 bg-black/80 backdrop-blur-sm"></div>
 
-      <div className="relative min-h-screen flex items-center justify-center p-2 md:p-4">
-        <div className="relative bg-stone-900 w-full max-w-7xl max-h-[90vh] overflow-y-auto shadow-2xl" onClick={(e) => e.stopPropagation()}>
-          <button
-            onClick={onClose}
-            className="sticky top-2 right-2 float-right z-10 p-2 bg-stone-800/80 hover:bg-stone-700 text-white rounded-full transition-colors"
-          >
-            <X className="w-5 h-5 md:w-6 md:h-6" />
-          </button>
+      <div className="relative h-full flex items-start md:items-center justify-center p-0 md:p-4">
+        <div 
+          id="menu-modal-content"
+          className="relative bg-stone-900 w-full h-full md:h-auto md:max-h-[90vh] overflow-y-auto shadow-2xl md:max-w-7xl" 
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Bouton fermer - fixe en haut */}
+          <div className="sticky top-0 right-0 z-20 flex justify-end p-2 md:p-4 bg-gradient-to-b from-stone-900 via-stone-900/95 to-transparent">
+            <button
+              onClick={onClose}
+              className="p-2 md:p-2.5 bg-stone-800/90 hover:bg-stone-700 text-white rounded-full transition-colors shadow-lg"
+            >
+              <X className="w-5 h-5 md:w-6 md:h-6" />
+            </button>
+          </div>
 
-          <div className="p-4 md:p-8 lg:p-12">
-            <div className="text-center mb-8 md:mb-12">
-              <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-white mb-3 md:mb-4">Notre Menu</h2>
-              <div className="w-16 md:w-20 h-1 bg-[#6b4f3a] mx-auto"></div>
+          <div className="px-4 pb-4 md:px-8 md:pb-8 lg:px-12 lg:pb-12 pt-0 md:pt-4">
+            <div className="text-center mb-6 md:mb-8 lg:mb-12">
+              <h2 className="font-serif text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-white mb-2 md:mb-3 lg:mb-4">Notre Menu</h2>
+              <div className="w-12 md:w-16 lg:w-20 h-0.5 md:h-1 bg-[#6b4f3a] mx-auto"></div>
             </div>
 
             {loading ? (
-              <div className="text-center text-white text-lg md:text-xl py-12">
+              <div className="text-center text-white text-base md:text-lg lg:text-xl py-12">
                 Chargement du menu...
               </div>
             ) : (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 lg:gap-12">
-                {/* Colonne de gauche: Entrées, Pâtes, Poissons, Salades */}
-                <div className="space-y-6 md:space-y-8">
-                  {leftCategories.map((category) => (
-                    <MenuSection
-                      key={category._id}
-                      icon={getIconComponent(category.icon)}
-                      title={category.title}
-                      subtitle={category.subtitle}
-                      items={getItemsForCategory(category._id)}
-                    />
-                  ))}
+              <>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 lg:gap-12">
+                  {/* Colonne de gauche */}
+                  <div className="space-y-6 md:space-y-8">
+                    {leftCategories.map((category) => (
+                      <MenuSection
+                        key={category._id}
+                        icon={getIconComponent(category.icon)}
+                        title={category.title}
+                        subtitle={category.subtitle}
+                        items={getItemsForCategory(category._id)}
+                      />
+                    ))}
+                  </div>
+
+                  {/* Colonne de droite */}
+                  <div className="lg:border-l lg:border-stone-700 lg:pl-12 space-y-6 md:space-y-8">
+                    {rightCategories.map((category) => (
+                      <MenuSection
+                        key={category._id}
+                        icon={getIconComponent(category.icon)}
+                        title={category.title}
+                        subtitle={category.subtitle}
+                        items={getItemsForCategory(category._id)}
+                      />
+                    ))}
+                  </div>
                 </div>
 
-                {/* Colonne de droite: Tout le reste */}
-                <div className="lg:border-l lg:border-stone-700 lg:pl-12 space-y-6 md:space-y-8">
-                  {rightCategories.map((category) => (
-                    <MenuSection
-                      key={category._id}
-                      icon={getIconComponent(category.icon)}
-                      title={category.title}
-                      subtitle={category.subtitle}
-                      items={getItemsForCategory(category._id)}
-                    />
-                  ))}
-                </div>
-              </div>
+                
+              </>
             )}
           </div>
         </div>
@@ -177,9 +206,9 @@ function MenuSection({ icon, title, subtitle, items }: MenuSectionProps) {
     <div className="text-white">
       <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
         <div className="text-[#6b4f3a] flex-shrink-0">{icon}</div>
-        <h3 className="font-serif text-xl md:text-2xl text-amber-50">
+        <h3 className="font-serif text-lg md:text-xl lg:text-2xl text-amber-50">
           {title}
-          {subtitle && <span className="text-sm md:text-base lg:text-lg text-stone-400 ml-2 block md:inline">{subtitle}</span>}
+          {subtitle && <span className="text-xs md:text-sm lg:text-base xl:text-lg text-stone-400 ml-2 block md:inline">{subtitle}</span>}
         </h3>
       </div>
       <div className="space-y-2 md:space-y-3">

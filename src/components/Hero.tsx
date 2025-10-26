@@ -50,7 +50,7 @@ export default function Hero({ onReserve, onMenuClick }: HeroProps) {
     return (
       <div className="relative h-screen w-full overflow-hidden bg-stone-900">
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-white text-xl">Chargement...</div>
+          <div className="text-white text-xl"></div>
         </div>
       </div>
     );
