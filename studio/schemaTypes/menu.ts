@@ -38,12 +38,6 @@ export default defineType({
               description: 'Nom d\'icône Lucide (ex: "salad", "fish", "beef", "Hamburger")',
             },
             {
-              name: 'order',
-              title: 'Ordre d\'affichage',
-              type: 'number',
-              
-            },
-            {
               name: 'items',
               title: 'Plats',
               type: 'array',
@@ -66,12 +60,6 @@ export default defineType({
                       name: 'description',
                       title: 'Description (optionnel)',
                       type: 'text',
-                    },
-                    {
-                      name: 'order',
-                      title: 'Ordre d\'affichage',
-                      type: 'number',
-                      
                     },
                   ],
                   preview: {
