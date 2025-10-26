@@ -60,7 +60,7 @@ export default function About() {
   }
 
   return (
-    <section id="about" className="py-10 md:py-16 px-4 bg-stone-900 text-white">
+    <section id="about" className="pt-24 md:pt-28 py-10 md:py-16 px-4 bg-stone-900 text-white">
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-center">
           {/* Text Content */}

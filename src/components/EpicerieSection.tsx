@@ -44,7 +44,7 @@ export default function EpicerieSection() {
   }
 
   return (
-    <section id="epicerie" className="min-h-screen flex items-center py-12 md:py-20 px-4 bg-[#f5f0ea]">
+    <section id="epicerie" className="pt-24 md:pt-28 min-h-screen flex items-center py-12 md:py-20 px-4 bg-[#f5f0ea]">
       <div className="max-w-6xl mx-auto w-full">
         <div className="text-center mb-8 md:mb-12 lg:mb-16">
           <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-stone-900 mb-3 md:mb-4">

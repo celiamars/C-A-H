@@ -56,7 +56,7 @@ export default function Reviews() {
   }
 
   return (
-    <section id="avis" className="min-h-screen flex items-center py-12 md:py-20 px-4 bg-white">
+    <section id="avis" className="pt-24 md:pt-28 min-h-screen flex items-center py-12 md:py-20 px-4 bg-white">
       <div className="max-w-6xl mx-auto w-full">
         <div className="text-center mb-8 md:mb-12 lg:mb-16">
           <img

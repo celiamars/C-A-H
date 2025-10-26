@@ -87,18 +87,17 @@ export default function MenuModal({ isOpen, onClose }: MenuModalProps) {
   if (!isOpen) return null;
 
   const getIconComponent = (iconName: string) => {
-    // Cas spécial pour burger
-    const lowerName = iconName.toLowerCase();
-    if (lowerName === 'sandwich' || lowerName === 'burger' || lowerName === 'hamburger') {
-      return <BurgerIcon className="w-8 h-8 md:w-9 md:h-9" />;
-    }
-    
-    const normalizedName = iconName.charAt(0).toUpperCase() + iconName.slice(1);
-    const IconComponent = (LucideIcons as any)[normalizedName];
-    return IconComponent ? 
-      <IconComponent className="w-5 h-5 md:w-6 md:h-6" /> : 
-      <LucideIcons.Utensils className="w-5 h-5 md:w-6 md:h-6" />;
-  };
+  const lowerName = iconName.toLowerCase();
+  if (lowerName === 'sandwich' || lowerName === 'burger' || lowerName === 'hamburger') {
+    return <BurgerIcon className="w-6 h-6 md:w-7 md:h-7 -translate-y-2" />;
+  }
+  
+  const normalizedName = iconName.charAt(0).toUpperCase() + iconName.slice(1);
+  const IconComponent = (LucideIcons as any)[normalizedName];
+  return IconComponent ? 
+    <IconComponent className="w-5 h-5 md:w-6 md:h-6" /> : 
+    <LucideIcons.Utensils className="w-5 h-5 md:w-6 md:h-6" />;
+};
 
   const getItemsForCategory = (categoryId: string) => {
     return menuData.items.filter((item) => item.category._ref === categoryId);

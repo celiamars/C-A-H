@@ -43,7 +43,7 @@ export default function BestSellers() {
   }
 
   return (
-    <section id="menu" className="py-10 md:py-16 px-4 bg-stone-900 text-white">
+    <section id="menu" className="pt-20 md:pt-20 py-10 md:py-16 px-4 bg-stone-900 text-white">
       <div className="max-w-6xl mx-auto">
         {/* Header - Compact but readable */}
         <div className="text-center mb-6 md:mb-10">
