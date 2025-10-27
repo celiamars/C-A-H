@@ -27,7 +27,7 @@ function MainApp() {
   }, []);
 
   const openReservation = () => {
-    window.open('https://www.thefork.fr/restaurant/le-comptoir-aux-huiles-by-delucce-r712561', '_blank');
+    window.location.href = 'tel:+33781075108';
   };
 
   const openMenu = () => {

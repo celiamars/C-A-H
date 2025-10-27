@@ -77,7 +77,7 @@ export default function Navbar() {
               Avis
             </button>
             <button
-              onClick={() => window.open('https://www.thefork.fr/restaurant/le-comptoir-aux-huiles-by-delucce-r712561', '_blank')}
+              onClick={() => window.location.href = 'tel:+33781075108'}
               className="bg-[#6b4f3a] text-white px-6 py-2 hover:bg-[#5a4230] transition-colors duration-300"
             >
               Réserver
@@ -129,7 +129,7 @@ export default function Navbar() {
               Avis
             </button>
             <button
-              onClick={() => window.open('https://www.thefork.fr/restaurant/le-comptoir-aux-huiles-by-delucce-r712561', '_blank')}
+              onClick={() => window.location.href = 'tel:+33781075108'}
               className="block w-full text-left px-4 py-2 bg-[#6b4f3a] text-white hover:bg-[#5a4230] transition-colors"
             >
               Réserver
